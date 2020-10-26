@@ -1,10 +1,11 @@
 .faPicker{
 	display: none;
 	position: absolute;
-	z-index: 1;
+	z-index: 1000;
 	background-color: #fff;
 	overflow-y: clip;
 	padding: 20px;
+	border-radius: 10px;
 	box-shadow: 0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.3);
 }
 
@@ -12,12 +13,14 @@
 	width: 30px;
 	height: 30px;
 	border: 1px solid #DDD;
-	border-radius: 2px;
+	border-radius: 6px;
 	padding: 2px;
+	color: #000;
+	background-color: #fff;
 }
 
 .faPicker-btn:hover {
-	border-color: #444;
+	transform: scale(1.21);
 }
 
 .faPicker-container{
@@ -67,7 +70,10 @@
 	line-height: 32px;
 	background-color: #fff;
 	cursor: pointer;
+}
 
+.active {
+	background-color: #ff00ff !important;
 }
 
 .faPicker-categoriesList li:hover {
