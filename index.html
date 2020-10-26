@@ -4,39 +4,26 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>FontAwesome IconPicker</title>
+	
 	<script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+	
 	<link rel="stylesheet" href="style.css">
 	<script src="script.js"></script>
 </head>
 <body>
-	
 
-	<input type="test" id="test" name="test" />
-	<p>
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus consectetur at tortor id luctus. Proin volutpat tincidunt tortor eget congue. Morbi tellus arcu, ornare eu tortor at, sagittis fermentum eros. Vivamus orci sem, tristique sit amet leo vitae, tincidunt elementum mauris. Praesent suscipit nisl id posuere dapibus. Nullam tincidunt, lectus non tempor dictum, massa felis aliquam eros, ornare molestie neque arcu in lectus. Vestibulum convallis lobortis faucibus. Sed non laoreet enim. Integer enim ipsum, iaculis eu blandit eu, mollis vitae ligula. Quisque ut interdum ipsum. Vivamus non ultrices turpis, eu tempus elit. Ut ultrices nulla odio, sit amet hendrerit ante consectetur nec. Morbi elementum, ante nec vehicula rutrum, dui sem convallis mi, id pellentesque diam nunc quis nulla. Sed ut metus rutrum, vehicula ligula sit amet, hendrerit tellus. Proin ultricies, metus sed placerat congue, nisi arcu aliquet lacus, eget euismod tellus tellus sit amet risus.
-
-Proin consectetur iaculis nulla hendrerit efficitur. Aenean congue ex faucibus est lacinia fringilla. Integer nisl libero, elementum at hendrerit ut, suscipit ut ligula. Nullam commodo euismod quam, nec placerat turpis ultricies vitae. Phasellus et lectus ultrices, luctus urna in, sollicitudin tortor. In aliquet augue non metus maximus sagittis. Nunc efficitur condimentum est, at lobortis metus. Mauris euismod sollicitudin purus sit amet euismod.
-
-Sed tempor cursus ligula vel interdum. Nulla lacinia nisi a odio pretium congue. Suspendisse dapibus in sapien nec posuere. Vestibulum non lobortis dolor. Suspendisse feugiat neque sit amet finibus condimentum. Nam sit amet varius est, non aliquet arcu. Integer placerat placerat felis ut mattis. In vitae nibh dolor. Praesent dapibus rhoncus vehicula. Nunc tempus felis at purus dignissim facilisis ac id arcu. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse rutrum condimentum nisi. In porttitor erat eu vehicula mattis. Nulla facilisi. Ut non libero diam. Integer ac porttitor nibh.
-
-Duis lacinia sapien tortor, non commodo nisi posuere eget. Aliquam luctus pulvinar nulla non interdum. Nam pretium ante nunc, quis tristique lectus ultrices eget. Nam aliquet ipsum tempus est eleifend, sed molestie mauris placerat. Cras quis risus ipsum. Vivamus pulvinar vestibulum ligula. Sed pharetra massa augue. Praesent vitae rutrum neque, at luctus risus. Duis posuere bibendum lectus eget lobortis. Morbi vestibulum bibendum dolor condimentum euismod. Suspendisse nec ex id neque malesuada cursus. Mauris ultricies hendrerit ultrices. Duis in rhoncus libero. In pretium volutpat arcu, sed lacinia felis porttitor vel. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
-
-Maecenas lorem massa, semper non sollicitudin sed, suscipit id libero. Sed purus neque, dapibus eget purus non, porttitor varius augue. Aenean fermentum sem in justo viverra, placerat volutpat est mollis. Ut nec lobortis enim. Etiam laoreet pellentesque tellus, a cursus enim viverra vel. Sed ut arcu vel nulla mollis tincidunt. Nam ultrices accumsan nisi, non dictum lectus vestibulum non. Maecenas consectetur tellus varius, auctor sapien et, efficitur magna. Nunc sed quam vel purus dictum rutrum. Phasellus ac urna nunc. Etiam sagittis quam neque, et dignissim metus euismod quis. Pellentesque cursus placerat erat, et scelerisque sapien ullamcorper vitae. Donec tincidunt est vel sapien pharetra, vitae tempus tortor bibendum. Integer vitae sapien et odio imperdiet tincidunt. <p>
+	<input id="test" name="fa-icon"/>
 
 	<script>
-	
-		console.log("Testing");
 		var picker = new FAPicker.Picker();
 		picker.enable(document.getElementById("test"));
-		
 		
 		$.getJSON("https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/metadata/icons.json", function(data) {
 			var iconsList = [];
 			for(var key in data) {
 				var keyData = data[key];
-				iconsList[key] = new FAPicker.Icon(key, keyData.styles, keyData.search.terms);
+				iconsList.push(new FAPicker.Icon(key, keyData.styles, keyData.search.terms));
 			}
 			
 			picker.addCategory(new FAPicker.Category("Test", iconsList));
@@ -49,69 +36,12 @@ Maecenas lorem massa, semper non sollicitudin sed, suscipit id libero. Sed purus
 			picker.addCategory(new FAPicker.Category("fefeg"));
 			picker.addCategory(new FAPicker.Category("fefeg"));
 			picker.addCategory(new FAPicker.Category("fefeg"));
-			picker.addCategory(new FAPicker.Category("fefeg"));
+			picker.addCategory(new FAPicker.Category("rgis is lon testx"));
 
-			
-			picker.update();
-			
-			console.log("finished" + iconsList.length);
+			picker.update(); // Update the DOM objects
 		});
 		
 
-		
-		/*var test = new FAPicker();
-		test.enable(document.getElementById("test"));
-	
-		var icons = [];
-		$.getJSON("https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/metadata/icons.json", function(data) {
-			
-			for(var key in data) {
-				var val = data[key];
-				icons[key] = new test.Icon(key, val.styles, val.search.terms);				
-			} 
-		});
-		console.log(icons);
-		//var cat = new test.Category("test", icons);
-		test.setIcons(icons);
-		
-		test.update();
-
-		console.log("Executed !");*/
-		
-		
-		/*var picker = new FAPicker({
-			searchBar: true,
-			categories: {
-				
-			},
-		});
-		picker.addCategory(new Category(icons));
-		picker.enable(document.getElementById("Tes"));
-	
-	
-	
-		var corresponding_classes = {
-			"solid": "fas",
-			"regular": "far",
-			"light": "fal",
-			"duotone": "fad",
-			"brands": "fab"
-		};
-	
-		$.getJSON("https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/metadata/icons.json", function(data) {
-			console.log(data);
-			for(var key in data) {
-				
-				for(var style in data[key].styles){
-					$("body").append('<i class="' + corresponding_classes[data[key].styles[style]] + ' fa-' + key + '"></i>');
-				}
-				
-				
-				
-			} 
-			
-			console.log(i);
-		});*/
 		
 	</script>
 </body>

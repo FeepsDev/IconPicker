@@ -12,26 +12,35 @@
 .faPicker-btn{
 	width: 30px;
 	height: 30px;
-	border: 1px solid #DDD;
-	border-radius: 6px;
+	border: 1px solid #fff;
+	border-radius: 15px;
 	padding: 2px;
 	color: #000;
 	background-color: #fff;
+	cursor: pointer;
 }
 
-.faPicker-btn:hover {
-	transform: scale(1.21);
+.faPicker-searchBar:focus{
+	outline: none; /* Chrome */
+}
+
+.faPicker-btn:hover{
+	background-color: #ddd;
 }
 
 .faPicker-container{
 	display: flex;
 	justify-content: space-around;
-	max-height: 200px;
 }
 
 .faPicker-categoriesList{
 	overflow-y: auto;
 	margin-right: 5px;
+	max-height: 200px;
+}
+
+.faPicker-iconsList {
+	max-height: 200px;
 }
 
 .faPicker-iconsList div{
@@ -55,8 +64,12 @@
 	margin-bottom: 15px;
 	display: inline-block;
 	border: 1px solid #ccc;
-	border-radius: 4px;
+	border-radius: 16px;
 	box-sizing: border-box;
+}
+
+.faPicker-searchBar:focus{
+	outline: none; /* Chrome */
 }
 
 .faPicker-categoriesList ul{
@@ -65,19 +78,28 @@
 }
 
 .faPicker-categoriesList li {
-	border-bottom: 1px solid #ddd;
+	border: 1px solid #fff;
+	border-radius: 16px;
 	list-style: none;
-	line-height: 32px;
-	background-color: #fff;
+	line-height: 24px;
+	margin-bottom: 2px;
+	padding: 0 5px;
 	cursor: pointer;
-}
-
-.active {
-	background-color: #ff00ff !important;
+	text-align: center;
+	
+	/* Unselectable text */
+	-webkit-user-select: none; /* Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+/Edge */
+	user-select: none; /* Standard */
 }
 
 .faPicker-categoriesList li:hover {
 	background-color: #ddd;
+}
+
+.active {
+	border: 1px solid #000 !important;
 }
 
 

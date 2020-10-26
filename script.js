@@ -1,148 +1,187 @@
-const FAPicker = (function(){
-	var self = {};
+FAPicker = (function(){
+	const self = {};
 	
-	var corresponding_classes = {
-		"solid": "fas",
-		"regular": "far",
-		"light": "fal",
-		"duotone": "fad",
-		"brands": "fab"
+	const corresponding_classes = {
+		solid: "fas",
+		regular: "far",
+		light: "fal",
+		duotone: "fad",
+		brands: "fab"
 	};
+	self.corresponding_classes = corresponding_classes;
 	
-	self.Picker = class {
-		constructor(){
+	const default_options = {
+		showCategories: true,
+		showSearchBar: true,
+		iconsPerRow: 6,
+		searchText: "Search an icon..."
+	};
+	self.default_options = default_options;
+	
+	/*
+		Main class that manage DOM objects
+	*/
+	self.Picker = (function () { // IE doesn't support "class" syntax
+		function Picker(options){ // IE doesn't support default parameters
+			const a = this; // Used to get a reference to "this" in callback functions (mainly events)
+			
+			// Options + Default option (IE doesn't have Object.assign function)
+			this.options = options || {};
+			for (let opt in default_options){
+				if (default_options.hasOwnProperty(opt) && !this.options.hasOwnProperty(opt)){
+					this.options[opt] = default_options[opt];
+				}
+			}
+			
+			// Variables
 			this.categories = [];
 			this.selectedCategories = [];
 			this.searchValue = "";
-			this.selectedInput = null;
+			this.lastInput = null; // Used to know what was the last input that used the icon picker
 			
-			var pickerDiv = document.createElement("div");
-			pickerDiv.classList.add("faPicker");
-			document.body.appendChild(pickerDiv);
-			this.pickerDiv = pickerDiv;
-			
-			this.searchBar = document.createElement("input");
-			this.searchBar.classList.add("faPicker-searchBar");
-			this.searchBar.setAttribute("type", "text");
-			this.searchBar.setAttribute("placeholder", "Search...");
-			this.pickerDiv.appendChild(this.searchBar);
-			
-			var self = this;
-			const inputHandler = function(e){
-				const val = e.target.value;
-				self.searchValue = val.toLowerCase().trim();
-				self.updateIcons();
+			// Main div
+			{
+				this.pickerDiv = document.createElement("div");
+				this.pickerDiv.classList.add("faPicker");
+				document.body.appendChild(this.pickerDiv);
 			}
-			this.searchBar.addEventListener("input", inputHandler);
-			this.searchBar.addEventListener("propertychange", inputHandler); // IE8
 			
-			var group = document.createElement("div");
-			group.classList.add("faPicker-container");
-			this.pickerDiv.appendChild(group);
-			
-			this.catList = document.createElement("div");
-			this.catList.classList.add("faPicker-categoriesList", "faPicker-hideScroll");
-			group.appendChild(this.catList);
-			
-			this.iconsDiv = document.createElement("div");
-			this.iconsDiv.classList.add("faPicker-iconsList");
-			group.appendChild(this.iconsDiv);
-			
-			this.clickListener = function(){
-				console.log("Clicked");
+			// Search Bar
+			if(this.options.showSearchBar){
+				this.searchBar = document.createElement("input");
+				this.searchBar.classList.add("faPicker-searchBar");
+				this.searchBar.setAttribute("type", "text");
+				this.searchBar.setAttribute("placeholder", this.options.searchText);
+				this.pickerDiv.appendChild(this.searchBar);
 				
-				var rect = this.getBoundingClientRect();
-				pickerDiv.style.top = (rect.top + this.offsetHeight) + "px";
-				pickerDiv.style.left = rect.left + "px";
+				const inputHandler = function(e){
+					a.searchValue = e.target.value.toLowerCase().trim();
+					a.updateIcons();
+				}
 				
-				//Display
-				pickerDiv.style.display = "block";
-				self.selectedInput = this;
+				this.searchBar.addEventListener("input", inputHandler);
+				this.searchBar.addEventListener("propertychange", inputHandler); // IE8
+			}
+
+			// Group that contains the icons list and the categories list.
+			{
+				this.mainGroup = document.createElement("div");
+				this.mainGroup.classList.add("faPicker-container");
+				this.pickerDiv.appendChild(this.mainGroup);
+				
+				if(this.options.showCategories){
+					this.catList = document.createElement("div");
+					this.catList.classList.add("faPicker-categoriesList");
+					this.catList.classList.add("faPicker-hideScroll");
+					this.mainGroup.appendChild(this.catList);
+				}
+
+				this.iconsDiv = document.createElement("div");
+				this.iconsDiv.classList.add("faPicker-iconsList");
+				this.mainGroup.appendChild(this.iconsDiv);
+			}
+
+			this.clickListener = function(){ // Listener used by enable/disable function
+				/*
+					Display and move the icon picker.
+				*/
+				
+				const rect = this.getBoundingClientRect();
+				a.pickerDiv.style.top = (rect.top + this.offsetHeight) + "px";
+				a.pickerDiv.style.left = rect.left + "px";
+				a.pickerDiv.style.display = "block";
+				
+				a.lastInput = this;
 			};
 		}
 		
-		addCategory(category){
-			this.categories.push(category);
-		}
+		/*
+			The update functions rebuild the DOM objects
+		*/
 		
-		update(){
-			this.updateCategories();
+		Picker.prototype.update = function(){
+			if(this.options.showCategories){
+				this.updateCategories();
+			}
+			
 			this.updateIcons();
 		}
 		
-		updateCategories(){
+		Picker.prototype.updateCategories = function(){
+			const a = this;
+			
 			while (this.catList.hasChildNodes()) {
 				this.catList.removeChild(this.catList.lastChild); // Remove children
 			}
 			
-			var ul = document.createElement("ul");
-			
-			for(const key in this.categories){
-				var category = this.categories[key];
+			const ul = document.createElement("ul");
+			for(let key in this.categories){
+				const category = this.categories[key];
 				
-				var li = document.createElement("li");
-				li.innerHTML = category.name;
-				
-				var self = this;
+				const li = document.createElement("li");		
 				li.addEventListener("click", function(){ // Add click listener here
 					if (this.classList.contains("active")){
 						this.classList.remove("active");
 						
-						const index = self.selectedCategories.indexOf(key);
+						// Remove by value the category from the array
+						const index = a.selectedCategories.indexOf(key);
 						if (index > -1) {
-							self.selectedCategories.splice(index, 1);
+							a.selectedCategories.splice(index, 1);
 						}
 					}else{
 						this.classList.add("active");
-						self.selectedCategories.push(key);
+						a.selectedCategories.push(key);
 					}
 					
-					self.updateIcons();
+					a.updateIcons();
 				});
-				
+				li.innerHTML = category.name;
 				ul.appendChild(li);
 			}
 			
 			this.catList.appendChild(ul);
 		}
 		
-		// This function rebuild the DOM objects.
-		updateIcons(){
+		Picker.prototype.updateIcons = function(){
+			const a = this;
+			
 			while (this.iconsDiv.hasChildNodes()) {
 				this.iconsDiv.removeChild(this.iconsDiv.lastChild); // Remove children
 			}
 			
-			var test  = document.createElement("div");
-			var table = document.createElement("table");
-			var tBody = document.createElement("tBody");
+			const scrollDiv  = document.createElement("div"); // Div used to correctly position the scroll bar.
+			const table = document.createElement("table");
+			const tBody = document.createElement("tBody");
 			table.appendChild(tBody);
 			
-			var createdIcons = 0;
-			var tr;
-			for(var catKey in this.categories){
-				var category = this.categories[catKey];
+			let createdIcons = 0;
+			let tr;
+			for(let catKey in this.categories){
+				const category = this.categories[catKey];
 				
-				if(this.searchValue.length === 0){
+				if(this.searchValue.length === 0){ // If the user is searching something we ignore categories.
 					if(this.selectedCategories.length !== 0){
-						if(!this.selectedCategories.includes(catKey)){
+						if(!this.selectedCategories.indexOf(catKey) > -1){ // Only show the icons of selected categories.
 							continue;
 						}
 					}
 				}
 
-
-				for(var key in category.icons){
-					const icon = category.icons[key];
+				for(let iconKey in category.icons){
+					const icon = category.icons[iconKey];
 					
-					
+					/*
+						Make the user's search, looking at the icon name and then at the "searchTerms"
+					*/
 					if(this.searchValue.length !== 0){
-						var found = false;
+						let found = false;
 						
 						if(icon.name.indexOf(this.searchValue) > -1){
 							found = true;
 						}else{
-							for(const searches of icon.searchTerms){
-								if (searches.indexOf(this.searchValue) > -1) {
+							for(let searchKey in icon.searchTerms){
+								const search = icon.searchTerms[searchKey];
+								if (search.indexOf(this.searchValue) > -1) {
 									found = true;
 									break;
 								}
@@ -155,74 +194,83 @@ const FAPicker = (function(){
 					}
 	
 					
-					for(var style of icon.styles){
-						if(createdIcons % 6 == 0){
+					for(let styleKey in icon.styles){
+						const style = icon.styles[styleKey];
+						
+						if(createdIcons % this.options.iconsPerRow == 0){
 							tr = document.createElement("tr");
 							tBody.appendChild(tr);
 						}
 						
 						// Create the icon DOM
-						const td = document.createElement("td");
-						tr.appendChild(td);
-						
-						const btn = document.createElement("button");
-						btn.classList.add("faPicker-btn");
-						td.appendChild(btn);
+						{
+							const td = document.createElement("td");
+							
+							const i = document.createElement("i");
+							i.classList.add(corresponding_classes[style]);
+							i.classList.add("fa-" + icon.name);
+							
+							
+							const btn = document.createElement("button");
+							btn.classList.add("faPicker-btn");
+							btn.addEventListener("click", function(){ // Add click listener here
+								a.lastInput.value = i.className;
+							});
+							
+							tr.appendChild(td);
+							td.appendChild(btn);
+							btn.appendChild(i);
+						}
 
-						const i = document.createElement("i");
-						i.classList.add(corresponding_classes[style]);
-						i.classList.add("fa-" + icon.name);
-						btn.appendChild(i);
-						
-						var self = this;
-						btn.addEventListener("click", function(){ // Add click listener here
-							self.selectedInput.value = i.className;
-						});
 						
 						createdIcons += 1;
 					}
 				}
 			}
 			
-			test.appendChild(table);
-			this.iconsDiv.appendChild(test);
+			scrollDiv.appendChild(table);
+			this.iconsDiv.appendChild(scrollDiv);
 		}
 		
-		enable(domObj){
+		Picker.prototype.addCategory = function(category){
+			this.categories.push(category);
+		}
+		
+		Picker.prototype.enable = function(domObj){
 			domObj.addEventListener("click", this.clickListener);
 		}
 		
-		disable(domObj){
+		Picker.prototype.disable = function(domObj){
 			domObj.addEventListener("click", this.clickListener);
 		}
-	}
+		
+		return Picker;
+	}());
 	
-	self.Icon = class {
-		constructor(name, styles, searchTerms){
+	/*
+		Icon class (Act like a data container).
+	*/
+	self.Icon = (function () {
+		function Icon(name, styles, searchTerms){
 			this.name = name;
 			this.styles = styles;
 			this.searchTerms = searchTerms;
 		}
-	}
+		
+		return Icon;
+	}());
 	
-	self.Category = class {
-		constructor(name, icons=[]){
+	/*
+		Category class (Act like a data container).
+	*/
+	self.Category = (function () {
+		function Category(name, icons){
 			this.name = name;
-			this.icons = icons;
+			this.icons = icons || [];
 		}
 		
-		addIcon(icon){
-			this.icons[icon.name] = icon;
-		}
-		
-		removeIcon(icon){
-			if(typeof icon == "string"){
-				this.icons[icon] = null;
-			}else{
-				this.icons[icon.name] = null;
-			}
-		}
-	}
+		return Category;
+	}());
 
 	return self;
 })();
