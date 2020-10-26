@@ -26,8 +26,40 @@ Duis lacinia sapien tortor, non commodo nisi posuere eget. Aliquam luctus pulvin
 Maecenas lorem massa, semper non sollicitudin sed, suscipit id libero. Sed purus neque, dapibus eget purus non, porttitor varius augue. Aenean fermentum sem in justo viverra, placerat volutpat est mollis. Ut nec lobortis enim. Etiam laoreet pellentesque tellus, a cursus enim viverra vel. Sed ut arcu vel nulla mollis tincidunt. Nam ultrices accumsan nisi, non dictum lectus vestibulum non. Maecenas consectetur tellus varius, auctor sapien et, efficitur magna. Nunc sed quam vel purus dictum rutrum. Phasellus ac urna nunc. Etiam sagittis quam neque, et dignissim metus euismod quis. Pellentesque cursus placerat erat, et scelerisque sapien ullamcorper vitae. Donec tincidunt est vel sapien pharetra, vitae tempus tortor bibendum. Integer vitae sapien et odio imperdiet tincidunt. <p>
 
 	<script>
+	
+		console.log("Testing");
+		var picker = new FAPicker.Picker();
+		picker.enable(document.getElementById("test"));
 		
-		var test = new FAPicker();
+		
+		$.getJSON("https://raw.githubusercontent.com/FortAwesome/Font-Awesome/master/metadata/icons.json", function(data) {
+			var iconsList = [];
+			for(var key in data) {
+				var keyData = data[key];
+				iconsList[key] = new FAPicker.Icon(key, keyData.styles, keyData.search.terms);
+			}
+			
+			picker.addCategory(new FAPicker.Category("Test", iconsList));
+			picker.addCategory(new FAPicker.Category("Animals"));
+			picker.addCategory(new FAPicker.Category("Test"));
+			picker.addCategory(new FAPicker.Category("gzgzzgzg"));
+			picker.addCategory(new FAPicker.Category("Test"));
+			picker.addCategory(new FAPicker.Category("fefeg"));
+			picker.addCategory(new FAPicker.Category("fefeg"));
+			picker.addCategory(new FAPicker.Category("fefeg"));
+			picker.addCategory(new FAPicker.Category("fefeg"));
+			picker.addCategory(new FAPicker.Category("fefeg"));
+			picker.addCategory(new FAPicker.Category("fefeg"));
+
+			
+			picker.update();
+			
+			console.log("finished" + iconsList.length);
+		});
+		
+
+		
+		/*var test = new FAPicker();
 		test.enable(document.getElementById("test"));
 	
 		var icons = [];
@@ -44,7 +76,7 @@ Maecenas lorem massa, semper non sollicitudin sed, suscipit id libero. Sed purus
 		
 		test.update();
 
-		console.log("Executed !");
+		console.log("Executed !");*/
 		
 		
 		/*var picker = new FAPicker({
