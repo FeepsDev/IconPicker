@@ -20,7 +20,7 @@
 	cursor: pointer;
 }
 
-.faPicker-searchBar:focus{
+.faPicker-btn:focus{
 	outline: none; /* Chrome */
 }
 
@@ -94,12 +94,11 @@
 	user-select: none; /* Standard */
 }
 
-.faPicker-categoriesList li:hover {
-	background-color: #ddd;
-}
-
-.active {
+.faPicker-categoriesList .active {
 	border: 1px solid #000 !important;
 }
 
+.faPicker-categoriesList li:hover {
+	background-color: #ddd;
+}
 

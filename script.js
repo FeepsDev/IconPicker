@@ -13,6 +13,7 @@ FAPicker = (function(){
 	const default_options = {
 		showCategories: true,
 		showSearchBar: true,
+		hideOnSelect: false,
 		iconsPerRow: 6,
 		searchText: "Search an icon..."
 	};
@@ -89,10 +90,24 @@ FAPicker = (function(){
 				const rect = this.getBoundingClientRect();
 				a.pickerDiv.style.top = (rect.top + this.offsetHeight) + "px";
 				a.pickerDiv.style.left = rect.left + "px";
-				a.pickerDiv.style.display = "block";
+				a.open();
 				
 				a.lastInput = this;
 			};
+			
+			window.addEventListener("mouseup", function(e){
+				// If clicked away from the icon picker, close it
+				let target = e.target
+				do{
+					if(target == a.pickerDiv){
+						return; // Ignore
+					}
+					
+					target = target.parentNode;
+				}while(target != undefined);
+				
+				a.close();
+			});
 		}
 		
 		/*
@@ -215,6 +230,10 @@ FAPicker = (function(){
 							btn.classList.add("faPicker-btn");
 							btn.addEventListener("click", function(){ // Add click listener here
 								a.lastInput.value = i.className;
+								
+								if(a.options.hideOnSelect){
+									a.close();
+								}
 							});
 							
 							tr.appendChild(td);
@@ -242,6 +261,14 @@ FAPicker = (function(){
 		
 		Picker.prototype.disable = function(domObj){
 			domObj.addEventListener("click", this.clickListener);
+		}
+		
+		Picker.prototype.open = function(){
+			this.pickerDiv.style.display = "block";
+		}
+		
+		Picker.prototype.close = function(){
+			this.pickerDiv.style.display = "none";
 		}
 		
 		return Picker;
