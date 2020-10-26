@@ -161,7 +161,7 @@ FAPicker = (function(){
 				
 				if(this.searchValue.length === 0){ // If the user is searching something we ignore categories.
 					if(this.selectedCategories.length !== 0){
-						if(!this.selectedCategories.indexOf(catKey) > -1){ // Only show the icons of selected categories.
+						if(!(this.selectedCategories.indexOf(catKey) > -1)){ // Only show the icons of selected categories.
 							continue;
 						}
 					}
