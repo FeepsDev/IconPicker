@@ -170,6 +170,7 @@ FAPicker = (function(){
 			table.appendChild(tBody);
 			
 			let createdIcons = 0;
+			let alreadyCreated = {}; // Because multiple category can have the same icon, so don't add the same icon two times.
 			let tr;
 			for(let catKey in this.categories){
 				const category = this.categories[catKey];
@@ -184,6 +185,10 @@ FAPicker = (function(){
 
 				for(let iconKey in category.icons){
 					const icon = category.icons[iconKey];
+					
+					if(alreadyCreated[icon.name]){
+						continue;
+					}
 					
 					/*
 						Make the user's search, looking at the icon name and then at the "searchTerms"
@@ -243,6 +248,7 @@ FAPicker = (function(){
 
 						
 						createdIcons += 1;
+						alreadyCreated[icon.name] = true;
 					}
 				}
 			}
