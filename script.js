@@ -1,19 +1,10 @@
 FAPicker = (function(){
 	const self = {};
 	
-	const corresponding_classes = {
-		solid: "fas",
-		regular: "far",
-		light: "fal",
-		duotone: "fad",
-		brands: "fab"
-	};
-	self.corresponding_classes = corresponding_classes;
-	
 	const default_options = {
 		showCategories: true,
 		showSearchBar: true,
-		hideOnSelect: false,
+		hideOnSelect: true,
 		iconsPerRow: 6,
 		searchText: "Search an icon..."
 	};
@@ -186,17 +177,17 @@ FAPicker = (function(){
 				for(let iconKey in category.icons){
 					const icon = category.icons[iconKey];
 					
-					if(alreadyCreated[icon.name]){
+					if(alreadyCreated[icon.id]){
 						continue;
 					}
 					
 					/*
-						Make the user's search, looking at the icon name and then at the "searchTerms"
+						Make the user's search, looking at the icon id and then at the "searchTerms"
 					*/
 					if(this.searchValue.length !== 0){
 						let found = false;
 						
-						if(icon.name.indexOf(this.searchValue) > -1){
+						if(icon.id.indexOf(this.searchValue) > -1){
 							found = true;
 						}else{
 							for(let searchKey in icon.searchTerms){
@@ -214,8 +205,8 @@ FAPicker = (function(){
 					}
 	
 					
-					for(let styleKey in icon.styles){
-						const style = icon.styles[styleKey];
+					//for(let styleKey in icon.styles){
+						// const style = icon.styles[styleKey];
 						
 						if(createdIcons % this.options.iconsPerRow == 0){
 							tr = document.createElement("tr");
@@ -227,8 +218,16 @@ FAPicker = (function(){
 							const td = document.createElement("td");
 							
 							const i = document.createElement("i");
-							i.classList.add(corresponding_classes[style]);
-							i.classList.add("fa-" + icon.name);
+							
+							if(Array.isArray(icon.classes)){
+								for (let clazz in icon.classes){
+									i.classList.add(icon.classes[clazz]);
+								}
+							}else{
+								i.className = icon.classes;
+							}
+							
+							i.innerHTML = icon.content;
 							
 							
 							const btn = document.createElement("button");
@@ -248,8 +247,8 @@ FAPicker = (function(){
 
 						
 						createdIcons += 1;
-						alreadyCreated[icon.name] = true;
-					}
+						alreadyCreated[icon.id] = true;
+					// }
 				}
 			}
 			
@@ -284,10 +283,11 @@ FAPicker = (function(){
 		Icon class (Act like a data container).
 	*/
 	self.Icon = (function () {
-		function Icon(name, styles, searchTerms){
-			this.name = name;
-			this.styles = styles;
-			this.searchTerms = searchTerms;
+		function Icon(id, classes, searchTerms, optContent){
+			this.id = id;
+			this.classes = classes;
+			this.searchTerms = searchTerms || [];
+			this.content = optContent || "";
 		}
 		
 		return Icon;
