@@ -83,7 +83,10 @@
 		
 		const matPicker = new IconPicker.Picker({
 			showCategories: false,
-			iconsPerRow: 7
+			iconsPerRow: 7,
+			onSelect: function(picker, inputDom, iconDom, icon){
+				inputDom.value = icon.content;
+			}
 		});
 		matPicker.enable(document.getElementById("materialIconsPicker"));
 

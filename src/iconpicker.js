@@ -6,7 +6,10 @@ IconPicker = (function(){
 		showSearchBar: true,
 		hideOnSelect: true,
 		iconsPerRow: 6,
-		searchText: "Search an icon..."
+		searchText: "Search an icon...",
+		onSelect: function(picker, inputDom, iconDom, icon){
+			inputDom.value = iconDom.className;
+		}
 	};
 	self.default_options = default_options;
 	
@@ -229,7 +232,7 @@ IconPicker = (function(){
 						const btn = document.createElement("button");
 						btn.classList.add("iconPicker-btn");
 						btn.addEventListener("click", function(){ // Add click listener here
-							a.lastInput.value = i.className;
+							a.options.onSelect(a, a.lastInput, i, icon);
 							
 							if(a.options.hideOnSelect){
 								a.close();
