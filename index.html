@@ -19,7 +19,7 @@
 	<input id="materialIconsPicker" name="fa-icon"/>
 
 	<script>
-		const picker = new FAPicker.Picker({
+		const picker = new IconPicker.Picker({
 			showCategories: true,
 			showSearchBar: true,
 			hideOnSelect: true,
@@ -45,7 +45,7 @@
 					const style = val.styles[styleKey];
 					
 					// Two icon can't have the same id, so i'm appending the style to the key
-					const icon = new FAPicker.Icon(key + "-" + style, [corresponding_classes[style], "fa-" + key], val.search.terms);
+					const icon = new IconPicker.Icon(key + "-" + style, [corresponding_classes[style], "fa-" + key], val.search.terms);
 					iconsList.push(icon);
 					
 					if(!iconsByKey[key])
@@ -73,7 +73,7 @@
 						}
 					}
 					
-					picker.addCategory(new FAPicker.Category(key, catIcons));
+					picker.addCategory(new IconPicker.Category(key, catIcons));
 				}
 				
 				picker.update();
@@ -81,7 +81,7 @@
 		});
 		
 		
-		const matPicker = new FAPicker.Picker({
+		const matPicker = new IconPicker.Picker({
 			showCategories: false,
 			iconsPerRow: 7
 		});
@@ -93,10 +93,10 @@
 			let lines = data.split('\n');
 			for(let i = 0; i < lines.length - 1; i++){ // Ignoring the last line
 				const name = lines[i].split(' ')[0];
-				iconsList.push(new FAPicker.Icon(name, ["material-icons"], [], name));
+				iconsList.push(new IconPicker.Icon(name, ["material-icons"], [], name));
 			}
 			
-			matPicker.addCategory(new FAPicker.Category("Main", iconsList));
+			matPicker.addCategory(new IconPicker.Category("Main", iconsList));
 			matPicker.update();
 		});
 		

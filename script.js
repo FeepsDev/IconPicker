@@ -1,4 +1,4 @@
-FAPicker = (function(){
+IconPicker = (function(){
 	const self = {};
 	
 	const default_options = {
@@ -34,14 +34,14 @@ FAPicker = (function(){
 			// Main div
 			{
 				this.pickerDiv = document.createElement("div");
-				this.pickerDiv.classList.add("faPicker");
+				this.pickerDiv.classList.add("iconPicker");
 				document.body.appendChild(this.pickerDiv);
 			}
 			
 			// Search Bar
 			if(this.options.showSearchBar){
 				this.searchBar = document.createElement("input");
-				this.searchBar.classList.add("faPicker-searchBar");
+				this.searchBar.classList.add("iconPicker-searchBar");
 				this.searchBar.setAttribute("type", "text");
 				this.searchBar.setAttribute("placeholder", this.options.searchText);
 				this.pickerDiv.appendChild(this.searchBar);
@@ -58,18 +58,18 @@ FAPicker = (function(){
 			// Group that contains the icons list and the categories list.
 			{
 				this.mainGroup = document.createElement("div");
-				this.mainGroup.classList.add("faPicker-container");
+				this.mainGroup.classList.add("iconPicker-container");
 				this.pickerDiv.appendChild(this.mainGroup);
 				
 				if(this.options.showCategories){
 					this.catList = document.createElement("div");
-					this.catList.classList.add("faPicker-categoriesList");
-					this.catList.classList.add("faPicker-hideScroll");
+					this.catList.classList.add("iconPicker-categoriesList");
+					this.catList.classList.add("iconPicker-hideScroll");
 					this.mainGroup.appendChild(this.catList);
 				}
 
 				this.iconsDiv = document.createElement("div");
-				this.iconsDiv.classList.add("faPicker-iconsList");
+				this.iconsDiv.classList.add("iconPicker-iconsList");
 				this.mainGroup.appendChild(this.iconsDiv);
 			}
 
@@ -204,51 +204,46 @@ FAPicker = (function(){
 						}
 					}
 	
+					if(createdIcons % this.options.iconsPerRow == 0){
+						tr = document.createElement("tr");
+						tBody.appendChild(tr);
+					}
 					
-					//for(let styleKey in icon.styles){
-						// const style = icon.styles[styleKey];
+					// Create the icon DOM
+					{
+						const td = document.createElement("td");
 						
-						if(createdIcons % this.options.iconsPerRow == 0){
-							tr = document.createElement("tr");
-							tBody.appendChild(tr);
-						}
+						const i = document.createElement("i");
 						
-						// Create the icon DOM
-						{
-							const td = document.createElement("td");
-							
-							const i = document.createElement("i");
-							
-							if(Array.isArray(icon.classes)){
-								for (let clazz in icon.classes){
-									i.classList.add(icon.classes[clazz]);
-								}
-							}else{
-								i.className = icon.classes;
+						if(Array.isArray(icon.classes)){
+							for (let clazz in icon.classes){
+								i.classList.add(icon.classes[clazz]);
 							}
-							
-							i.innerHTML = icon.content;
-							
-							
-							const btn = document.createElement("button");
-							btn.classList.add("faPicker-btn");
-							btn.addEventListener("click", function(){ // Add click listener here
-								a.lastInput.value = i.className;
-								
-								if(a.options.hideOnSelect){
-									a.close();
-								}
-							});
-							
-							tr.appendChild(td);
-							td.appendChild(btn);
-							btn.appendChild(i);
+						}else{
+							i.className = icon.classes;
 						}
-
 						
-						createdIcons += 1;
-						alreadyCreated[icon.id] = true;
-					// }
+						i.innerHTML = icon.content;
+						
+						
+						const btn = document.createElement("button");
+						btn.classList.add("iconPicker-btn");
+						btn.addEventListener("click", function(){ // Add click listener here
+							a.lastInput.value = i.className;
+							
+							if(a.options.hideOnSelect){
+								a.close();
+							}
+						});
+						
+						tr.appendChild(td);
+						td.appendChild(btn);
+						btn.appendChild(i);
+					}
+
+					
+					createdIcons += 1;
+					alreadyCreated[icon.id] = true;
 				}
 			}
 			
